@@ -1,15 +1,82 @@
-#include <iostream>
 #include <vector>
+#include <string>
+#include <cctype>
 
 using namespace std;
 
 bool validarCPF(std::vector <int> cpf);
 vector<int> calcularCPF(string CPF);
 string validarEmail(string usuario);
-inline bool validarTerminacaoEmail( const string& dominio);
+bool validarTerminacaoEmail( const string& dominio);
 string validarTelefone(string telefone);
-inline bool validarDDD (int DDD, const vector <int>& listaDDD);
-inline bool validarDigitos (const string& numeroTelefonico);
+bool validarDDD (int DDD, const vector <int>& listaDDD);
+bool validarDigitos (const string& numeroTelefonico);
+bool validarNome(const string& nome);
+bool validarIdade (const string& idade);
+bool validarMatricula (const string& matricula);
+
+bool validarIdade (const string& idade){
+
+    if(idade.size() == 2) {
+
+        if (isalpha(idade[0]) && isalpha(idade[1])) {
+            return false;
+        } else {
+            int idadeINT = {(static_cast<int>(idade[0] - 48) * 10) + static_cast<int>(idade[1] - 48)};
+
+            if (idadeINT == 0 || idadeINT < 0 || idadeINT > 99) {
+                return false;
+            }
+        }
+    }
+    else {
+        return false;
+    }
+    return true;
+}
+bool validarNome(const string& nome){
+
+    int verificar = 0;
+
+    for (int i = 0; i < (int)nome.size(); ++i) {
+      if(isalpha(nome[i])){
+          if(i == 0){
+              if(isupper(nome[i])){
+                  verificar++;
+              }
+              else {
+                  return false;
+              }
+          }
+          else if(isspace(nome[i-1])){
+              if(isupper(nome[i])){
+                  verificar++;
+              }
+              else if(nome[i] == 'd'){
+                  verificar++;
+              }
+              else {
+                  return false;
+              }
+          }
+          else {
+              if(isupper(nome[i])){
+                  return false;
+              }
+              else {
+                  verificar++;
+              }
+          }
+      }
+      else if(isspace(nome[i])){
+          verificar++;
+      }
+      else {
+          return false;
+      }
+    }
+    return verificar == nome.size();
+}
 
 bool validarCPF(vector<int> cpf) {
 
@@ -67,22 +134,26 @@ string validarEmail(string usuario) {
 
     int posicaoArroba = 0;
     string terminacao;
+    bool teste = true;
     terminacao.clear();
 
     for(int i=0; i<(int)usuario.size(); i++ ){
         if(usuario[i] == '@') {
-            posicaoArroba = i;
-            for(int j = posicaoArroba+1, k = 0; (int)usuario.size() > j; j++, k++){
-                terminacao.push_back(usuario[j]);
+            if(i != 0) {
+                posicaoArroba = i;
+                for (int j = posicaoArroba + 1, k = 0; (int) usuario.size() > j; j++, k++) {
+                    terminacao.push_back(usuario[j]);
+                }
+            }
+            else {
+                teste = false;
             }
         }
     }
-    if(validarTerminacaoEmail(terminacao)){
+    if(validarTerminacaoEmail(terminacao) && teste){
         return usuario;
     }else {
         usuario.clear();
-        cout << "E-mail inválido, por favor informe novamente: ";
-        usuario = "**********************";
         return usuario;
     }
 
@@ -103,17 +174,16 @@ string validarTelefone(string telefone){
                             53,54,55,61,62,63,64,65,66,67,68,69,71,73,74,75,77,79,81,83,82,84,85,86,87,88,89,91,92,93,
                             95,94,96,97,98,99};
     int DDD = {(static_cast<int>(telefone[0] - 48)*10) + static_cast<int>(telefone[1] - 48)};
+
     if(validarDDD(DDD, listaDDD) && validarDigitos(telefone)){
-        cout << "Telefone Válido" << endl;
         return telefone;
     }
     else {
-        cout << "Telefone inválido" << endl;
         telefone.clear();
         return telefone;
     }
 }
-inline bool validarDDD (int DDD, const vector <int>& listaDDD){
+bool validarDDD (int DDD, const vector <int>& listaDDD){
     for(int digito : listaDDD){
         if(DDD == digito){
             return true;
@@ -121,10 +191,32 @@ inline bool validarDDD (int DDD, const vector <int>& listaDDD){
     }
     return false;
 }
-inline bool validarDigitos (const string& numeroTelefonico){
+bool validarDigitos (const string& numeroTelefonico){
     return (numeroTelefonico.size() - 2) == 9;
 }
+bool validarMatricula (const string& matricula){
 
+    int anoMatricula = 0, cont = 0;
+    vector <int> anosMatricula = {2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019};
+
+    for (int i = 1000; i >= 1;  i = i/ 10) {
+        anoMatricula+= (static_cast<int>(matricula[cont] - 48)*i);
+        cont++;
+    }
+    if(matricula.size() == 11){
+        int verificar = 0;
+
+        for (int i : anosMatricula) {
+            if(anoMatricula == i){
+                verificar++;
+            }
+        }
+        return verificar == 1;
+    }
+    else {
+        return false;
+    }
+}
 
 
 
