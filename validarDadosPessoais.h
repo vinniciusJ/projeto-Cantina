@@ -1,22 +1,22 @@
-//
-// Created by Vinicius on 08/10/2019.
-//
+#ifndef VALIDARDADOSPESSOAIS_H_INCLUDED
+#define VALIDARDADOSPESSOAIS_H_INCLUDED
 
-#ifndef PORJETO_CANTINA_IFPR_CADASTRARDADOSPESSOAIS_H
-#define PORJETO_CANTINA_IFPR_CADASTRARDADOSPESSOAIS_H
-
-#include <iostream>
 #include <vector>
-#include "validarDadosPessoais.h"
+#include <cctype>
+#include <string>
 
 using namespace std;
 
-string cadastrarCPF();
-string cadastrarNome();
-string cadastrarEmail();
-string cadastrarTelefone();
-string cadastrarIdade();
-string cadastrarMatricula();
-void cadastrarDados(string &nome, string &idade, string &matricula ,string &CPF, string &email, string &telefone);
+bool validarCPF(std::vector <int> cpf);
+vector<int> calcularCPF(string CPF);
+string validarEmail(string usuario);
+bool validarTerminacaoEmail( const string& dominio);
+string validarTelefone(string telefone);
+bool validarDDD (int DDD, const vector <int>& listaDDD);
+bool validarDigitos (const string& numeroTelefonico);
+bool validarNome(const string& nome);
+bool validarIdade (const string& idade);
+bool validarMatricula (const string& matricula);
 
-#endif //PORJETO_CANTINA_IFPR_CADASTRARDADOSPESSOAIS_H
+
+#endif // VALIDARDADOSPESSOAIS_H_INCLUDED
